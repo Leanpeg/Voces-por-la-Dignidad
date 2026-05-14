@@ -1,0 +1,999 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html>
+<!--
+  ╔══════════════════════════════════════════════════════════════╗
+  ║  VOCES POR LA DIGNIDAD · Blogger Theme v4                   ║
+  ║  Lenin Pérez Guzmán · Costa Rica                            ║
+  ║                                                              ║
+  ║  FIXES v4:                                                   ║
+  ║  - Widget sin b:if/b:elseif/b:else → posts siempre visibles  ║
+  ║  - Redes sociales en header y footer                         ║
+  ║  - Sección Biografía en página inicio                        ║
+  ║  - Etiquetas de temas visibles en cards y posts              ║
+  ║                                                              ║
+  ║  INSTALACIÓN:                                                ║
+  ║  1. Blogger → Tema → Editar HTML → Reemplazar todo → Guardar ║
+  ║  2. Crear página estática titulada exactamente "Sobre mí"    ║
+  ║  3. Etiquetas: "Derechos humanos" | "Accesibilidad" |        ║
+  ║     "Inclusión" | "Educación cívica"                        ║
+  ║  4. Actualizar URLs de redes sociales en el footer           ║
+  ╚══════════════════════════════════════════════════════════════╝
+-->
+<html b:version='2' class='v2' expr:dir='data:blog.languageDirection'
+  xmlns:b='http://www.google.com/2005/gml/b'
+  xmlns:data='http://www.google.com/2005/gml/data'
+  xmlns:expr='http://www.google.com/2005/gml/expr'>
+<head>
+  <meta charset='UTF-8'/>
+  <meta content='width=device-width,initial-scale=1' name='viewport'/>
+  <b:include data='blog' name='all-head-content'/>
+  <title><data:blog.pageTitle/></title>
+  <link rel='preconnect' href='https://fonts.googleapis.com'/>
+  <link rel='preconnect' href='https://fonts.gstatic.com' crossorigin='crossorigin'/>
+  <link href='https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&amp;family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&amp;display=swap' rel='stylesheet'/>
+
+<b:skin><![CDATA[
+/* ================================================================
+   VOCES POR LA DIGNIDAD — v4
+   Lenin Pérez Guzmán · Costa Rica
+   ================================================================ */
+
+/* ── TOKENS ─────────────────────────────────────────────────── */
+:root {
+  --ink:       #080e1d;
+  --navy:      #0c1c38;
+  --navy-mid:  #152d55;
+  --navy-soft: #1c3a6e;
+  --gold:      #c9973a;
+  --gold-lt:   #e4b96a;
+  --gold-pale: #fdf5e4;
+  --cream:     #faf8f3;
+  --white:     #ffffff;
+  --muted:     #6b7280;
+  --border:    #e2ddd5;
+  --text:      #1f2937;
+  --text-lt:   #4b5563;
+  --font-d: 'Playfair Display', Georgia, serif;
+  --font-s: 'DM Sans', 'Segoe UI', system-ui, sans-serif;
+  --hdr: 68px;
+  --max: 1120px;
+  --prose: 760px;
+  --ease: .22s cubic-bezier(.4,0,.2,1);
+  --sh: 0 2px 12px rgba(8,14,29,.09);
+  --sh-lg: 0 16px 48px rgba(8,14,29,.15);
+}
+
+/* ── RESET ──────────────────────────────────────────────────── */
+*,::before,::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 16px; scroll-behavior: smooth; }
+body {
+  font-family: var(--font-s);
+  color: var(--text);
+  background: var(--cream);
+  line-height: 1.65;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+img { max-width: 100%; height: auto; display: block; }
+a { color: inherit; text-decoration: none; transition: color var(--ease); }
+ul, ol { list-style: none; }
+button { font: inherit; cursor: pointer; background: none; border: none; }
+#navbar-iframe, .navbar-iframe-container { display: none !important; height: 0 !important; }
+.blogger-post-edit-link { display: none !important; }
+
+/* ── ACCESSIBILITY ──────────────────────────────────────────── */
+.skip {
+  position: absolute; top: -200%; left: 0;
+  padding: .5rem 1.5rem; background: var(--navy);
+  color: var(--white); font-weight: 600; font-size: .85rem;
+  z-index: 9999; border-radius: 0 0 6px 0; transition: top .2s;
+}
+.skip:focus { top: 0; }
+:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; border-radius: 3px; }
+
+/* ── LAYOUT ─────────────────────────────────────────────────── */
+.wrap { width: 100%; max-width: var(--max); margin-inline: auto; padding-inline: 1.5rem; }
+.prose { width: 100%; max-width: var(--prose); margin-inline: auto; padding-inline: 1.5rem; }
+
+/* ── HEADER ─────────────────────────────────────────────────── */
+.hdr {
+  position: sticky; top: 0; z-index: 300;
+  height: var(--hdr);
+  background: rgba(8,14,29,.97);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(201,151,58,.18);
+}
+.hdr-in {
+  max-width: var(--max); margin-inline: auto; padding-inline: 1.5rem;
+  height: 100%; display: flex; align-items: center;
+  justify-content: space-between; gap: 1.5rem;
+}
+/* Logo */
+.logo { display: flex; flex-direction: column; line-height: 1.1; }
+.logo-m { font-family: var(--font-d); font-weight: 900; font-size: 1.1rem; color: var(--white); letter-spacing: -.02em; }
+.logo-s { font-size: .62rem; color: rgba(255,255,255,.38); letter-spacing: .1em; text-transform: uppercase; margin-top: .2rem; }
+.logo:hover .logo-m { color: var(--gold-lt); }
+
+/* Nav desktop */
+.nav-d { display: flex; align-items: center; gap: .25rem; }
+.nav-d a {
+  display: block; padding: .4rem 1rem;
+  font-size: .78rem; font-weight: 500; letter-spacing: .05em; text-transform: uppercase;
+  color: rgba(255,255,255,.58); border-radius: 4px;
+  transition: color var(--ease), background var(--ease);
+}
+.nav-d a:hover, .nav-d a:focus { color: var(--white); background: rgba(255,255,255,.07); }
+
+/* Social icons header */
+.hdr-social { display: flex; align-items: center; gap: .5rem; }
+.hdr-social a {
+  display: flex; align-items: center; justify-content: center;
+  width: 32px; height: 32px; border-radius: 6px;
+  border: 1px solid rgba(255,255,255,.15);
+  color: rgba(255,255,255,.55);
+  transition: all var(--ease);
+}
+.hdr-social a:hover { color: var(--gold-lt); border-color: rgba(201,151,58,.5); background: rgba(201,151,58,.08); }
+.hdr-social svg { width: 15px; height: 15px; fill: currentColor; }
+
+/* Hamburger */
+.burger {
+  display: none; flex-direction: column; justify-content: center; gap: 5px;
+  width: 38px; height: 38px; padding: .45rem;
+  border: 1px solid rgba(255,255,255,.18); border-radius: 5px;
+}
+.burger:hover { border-color: rgba(201,151,58,.5); }
+.bar { display: block; width: 100%; height: 1.5px; background: rgba(255,255,255,.75); border-radius: 2px; transition: transform .25s, opacity .25s; }
+.burger[aria-expanded=true] .bar:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+.burger[aria-expanded=true] .bar:nth-child(2) { opacity: 0; }
+.burger[aria-expanded=true] .bar:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+/* Mobile nav */
+.nav-m {
+  display: none; position: fixed; inset: var(--hdr) 0 0;
+  background: rgba(8,14,29,.98); backdrop-filter: blur(20px);
+  flex-direction: column; padding: 2rem 1.5rem; gap: .5rem;
+  overflow-y: auto; z-index: 299;
+}
+.nav-m.open { display: flex; }
+.nav-m a { font-size: 1.2rem; font-weight: 500; color: rgba(255,255,255,.7); padding: .9rem 1rem; border-radius: 8px; transition: all var(--ease); }
+.nav-m a:hover { color: var(--white); background: rgba(255,255,255,.07); }
+.nav-m-social { display: flex; gap: .75rem; padding: 1.5rem 1rem 0; border-top: 1px solid rgba(255,255,255,.08); margin-top: 1rem; }
+.nav-m-social a { display: flex; align-items: center; gap: .5rem; font-size: .85rem; color: rgba(255,255,255,.45); }
+.nav-m-social a:hover { color: var(--gold-lt); }
+.nav-m-social svg { width: 16px; height: 16px; fill: currentColor; }
+
+/* ── HERO ───────────────────────────────────────────────────── */
+.hero {
+  position: relative; overflow: hidden; isolation: isolate;
+  background: var(--navy);
+  padding: 6rem 1.5rem 5rem;
+}
+.hero::before {
+  content: ''; position: absolute; inset: 0; z-index: 0;
+  background:
+    radial-gradient(ellipse 90% 70% at 75% 40%, rgba(201,151,58,.13) 0%, transparent 65%),
+    radial-gradient(ellipse 60% 90% at 5% 90%, rgba(21,45,85,.9) 0%, transparent 55%);
+}
+.hero::after {
+  content: ''; position: absolute; inset: 0; z-index: 0;
+  background-image: linear-gradient(rgba(201,151,58,.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(201,151,58,.035) 1px, transparent 1px);
+  background-size: 56px 56px;
+}
+.hero-in { position: relative; z-index: 1; max-width: 700px; }
+.hero-kicker {
+  display: inline-flex; align-items: center; gap: .75rem;
+  font-size: .7rem; font-weight: 700; letter-spacing: .15em; text-transform: uppercase;
+  color: var(--gold); margin-bottom: 1.5rem;
+}
+.hero-kicker::before { content: ''; display: block; width: 28px; height: 1px; background: var(--gold); }
+.hero h1 {
+  font-family: var(--font-d); font-weight: 900;
+  font-size: clamp(2.8rem, 7vw, 5.2rem);
+  color: var(--white); line-height: 1.02; letter-spacing: -.035em;
+  margin-bottom: 1.5rem;
+}
+.hero h1 em { font-style: italic; color: var(--gold-lt); }
+.hero-sub {
+  font-size: 1.08rem; color: rgba(255,255,255,.62);
+  line-height: 1.8; max-width: 540px; margin-bottom: 2.5rem;
+}
+.hero-ctas { display: flex; flex-wrap: wrap; gap: 1rem; }
+
+/* ── BOTONES ────────────────────────────────────────────────── */
+.btn {
+  display: inline-flex; align-items: center; gap: .5rem;
+  padding: .7rem 1.6rem; font-family: var(--font-s); font-size: .82rem;
+  font-weight: 600; letter-spacing: .02em; border-radius: 5px;
+  border: 1.5px solid transparent; transition: all var(--ease);
+}
+.btn-gold { background: var(--gold); color: var(--navy); border-color: var(--gold); }
+.btn-gold:hover, .btn-gold:focus { background: var(--gold-lt); border-color: var(--gold-lt); color: var(--navy); }
+.btn-ghost { color: rgba(255,255,255,.78); border-color: rgba(255,255,255,.25); }
+.btn-ghost:hover, .btn-ghost:focus { color: var(--white); border-color: rgba(255,255,255,.6); background: rgba(255,255,255,.07); }
+.btn-outline { color: var(--navy); border-color: var(--border); background: var(--white); }
+.btn-outline:hover, .btn-outline:focus { border-color: var(--gold); color: var(--gold); }
+.btn-navy { background: var(--navy); color: var(--white); border-color: var(--navy); }
+.btn-navy:hover, .btn-navy:focus { background: var(--navy-mid); border-color: var(--navy-mid); color: var(--white); }
+
+/* ── SECTION CHROME ─────────────────────────────────────────── */
+.sec-eyebrow {
+  display: flex; align-items: center; gap: 1rem;
+  font-size: .68rem; font-weight: 700; letter-spacing: .15em; text-transform: uppercase;
+  color: var(--gold); margin-bottom: 1.5rem;
+}
+.sec-eyebrow::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+.sec-h { font-family: var(--font-d); font-weight: 900; font-size: clamp(1.6rem,3.5vw,2.4rem); color: var(--ink); letter-spacing: -.025em; line-height: 1.15; }
+
+/* ── ARTÍCULOS / FILTROS ────────────────────────────────────── */
+.sec-art { padding: 4rem 0 0; }
+.filters { display: flex; flex-wrap: wrap; gap: .5rem; margin: 1.5rem 0 3rem; }
+.ftag {
+  display: inline-block; padding: .35rem 1rem;
+  font-size: .76rem; font-weight: 600; letter-spacing: .03em;
+  border: 1.5px solid var(--border); border-radius: 100px;
+  color: var(--text-lt); background: var(--white);
+  transition: all var(--ease);
+}
+.ftag:hover, .ftag:focus { border-color: var(--gold); color: var(--gold); }
+
+/* ── CARDS GRID ─────────────────────────────────────────────── */
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+  gap: 1.5rem;
+  padding-bottom: 5rem;
+}
+.card {
+  background: var(--white); border: 1px solid var(--border); border-radius: 14px;
+  display: flex; flex-direction: column; overflow: hidden;
+  transition: box-shadow var(--ease), transform var(--ease);
+  position: relative;
+}
+.card::after {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  background: linear-gradient(90deg, var(--gold), var(--gold-lt));
+  transform: scaleX(0); transform-origin: left; transition: transform var(--ease);
+}
+.card:hover { box-shadow: var(--sh-lg); transform: translateY(-5px); }
+.card:hover::after { transform: scaleX(1); }
+.card-body { padding: 2rem; flex: 1; display: flex; flex-direction: column; }
+.card-meta { display: flex; align-items: center; gap: .75rem; margin-bottom: 1.25rem; flex-wrap: wrap; }
+.card-date { font-size: .72rem; color: var(--muted); }
+.c-tag {
+  display: inline-block; font-size: .65rem; font-weight: 700; letter-spacing: .06em;
+  text-transform: uppercase; color: var(--navy-soft); background: rgba(28,58,110,.07);
+  padding: 2px 10px; border-radius: 100px;
+  transition: background var(--ease), color var(--ease);
+}
+.c-tag:hover { background: var(--navy); color: var(--white); }
+.card-title {
+  font-family: var(--font-d); font-weight: 700; font-size: 1.18rem;
+  line-height: 1.3; letter-spacing: -.01em; color: var(--ink);
+  margin-bottom: 1rem; flex: 1;
+}
+.card-title a { color: inherit; }
+.card-title a:hover { color: var(--navy-soft); }
+.card-excerpt { font-size: .87rem; color: var(--text-lt); line-height: 1.72; margin-bottom: 1.5rem; }
+.card-cta {
+  display: inline-flex; align-items: center; gap: .4rem;
+  font-size: .75rem; font-weight: 700; letter-spacing: .05em; text-transform: uppercase;
+  color: var(--gold);
+}
+.card-cta::after { content: '→'; transition: transform var(--ease); }
+.card-cta:hover::after { transform: translateX(4px); }
+
+/* Pager */
+.pager { display: flex; gap: 1rem; justify-content: center; padding: 1rem 0 5rem; }
+
+/* ── QUOTE BAND ─────────────────────────────────────────────── */
+.q-band {
+  background: var(--navy); padding: 5rem 1.5rem;
+  position: relative; overflow: hidden;
+}
+.q-band::before {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(ellipse 70% 100% at 100% 50%, rgba(201,151,58,.1), transparent);
+}
+.q-in { max-width: 680px; margin-inline: auto; text-align: center; position: relative; z-index: 1; }
+.q-mark { font-family: var(--font-d); font-size: 9rem; line-height: .55; color: rgba(201,151,58,.15); display: block; font-style: italic; margin-bottom: 1.5rem; }
+.q-text { font-family: var(--font-d); font-style: italic; font-weight: 700; font-size: clamp(1.4rem,3vw,2rem); color: var(--white); line-height: 1.45; margin-bottom: 1.25rem; }
+.q-author { font-size: .72rem; color: var(--gold); letter-spacing: .12em; text-transform: uppercase; font-weight: 600; }
+
+/* ── SOBRE / BIO ────────────────────────────────────────────── */
+.bio-band { background: var(--white); border-top: 1px solid var(--border); padding: 5rem 1.5rem; }
+.bio-grid { max-width: var(--max); margin-inline: auto; display: grid; grid-template-columns: 5fr 4fr; gap: 5rem; align-items: start; }
+.bio-eyebrow { font-size: .68rem; font-weight: 700; letter-spacing: .15em; text-transform: uppercase; color: var(--gold); margin-bottom: 1.25rem; }
+.bio-h { font-family: var(--font-d); font-weight: 900; font-size: clamp(1.6rem,3vw,2.2rem); color: var(--ink); letter-spacing: -.025em; line-height: 1.1; margin-bottom: 1.75rem; }
+.bio-text p { color: var(--text-lt); line-height: 1.85; margin-bottom: 1.1rem; font-size: .97rem; }
+.bio-text p:last-child { margin-bottom: 0; }
+.bio-cta { margin-top: 2rem; }
+
+/* Bio highlights */
+.bio-highlights { display: flex; flex-direction: column; gap: 1rem; }
+.bio-card {
+  background: var(--cream); border: 1px solid var(--border); border-radius: 12px;
+  padding: 1.25rem 1.5rem; display: flex; gap: 1rem; align-items: flex-start;
+}
+.bio-icon { font-size: 1.4rem; flex-shrink: 0; margin-top: .1rem; }
+.bio-card h3 { font-family: var(--font-d); font-size: .95rem; font-weight: 700; color: var(--ink); margin-bottom: .3rem; }
+.bio-card p { font-size: .8rem; color: var(--muted); line-height: 1.6; }
+
+/* ── TEMAS ──────────────────────────────────────────────────── */
+.topics-band { background: var(--cream); border-top: 1px solid var(--border); padding: 4rem 1.5rem 5rem; }
+.topics-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px,1fr)); gap: 1rem; margin-top: 2rem; }
+.topic-card {
+  background: var(--white); border: 1px solid var(--border); border-radius: 12px;
+  padding: 1.75rem 1.5rem; text-align: center;
+  transition: box-shadow var(--ease), transform var(--ease), border-color var(--ease);
+}
+.topic-card:hover { box-shadow: var(--sh); transform: translateY(-3px); border-color: var(--gold); }
+.topic-icon { font-size: 2rem; display: block; margin-bottom: 1rem; }
+.topic-card h3 { font-family: var(--font-d); font-size: .98rem; font-weight: 700; color: var(--ink); margin-bottom: .5rem; }
+.topic-card p { font-size: .8rem; color: var(--muted); line-height: 1.65; }
+
+/* ── PAGE HEADER (etiqueta, búsqueda, página estática) ──────── */
+.page-hdr {
+  background: var(--navy); padding: 3.5rem 1.5rem 4rem;
+  border-bottom: 3px solid var(--gold);
+}
+.page-hdr-in { max-width: var(--prose); margin-inline: auto; }
+.page-kicker { font-size: .68rem; font-weight: 700; letter-spacing: .15em; text-transform: uppercase; color: var(--gold); margin-bottom: 1rem; }
+.page-hdr h1 { font-family: var(--font-d); font-weight: 900; font-size: clamp(1.8rem,4vw,2.8rem); color: var(--white); letter-spacing: -.025em; line-height: 1.1; }
+
+/* ── POST ───────────────────────────────────────────────────── */
+.post-hdr {
+  background: var(--navy); padding: 3.5rem 1.5rem 4.5rem;
+  position: relative; overflow: hidden;
+}
+.post-hdr::before {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(ellipse 70% 80% at 85% 20%, rgba(201,151,58,.1), transparent);
+}
+.post-hdr-in { max-width: var(--prose); margin-inline: auto; position: relative; z-index: 1; }
+.breadcrumb { display: flex; flex-wrap: wrap; gap: .4rem; align-items: center; margin-bottom: 2rem; font-size: .72rem; }
+.breadcrumb li:not(:last-child)::after { content: '›'; margin-left: .4rem; color: rgba(255,255,255,.28); }
+.breadcrumb a { color: rgba(255,255,255,.48); }
+.breadcrumb a:hover { color: var(--gold); }
+.breadcrumb li:last-child { color: rgba(255,255,255,.35); }
+.post-tags { display: flex; flex-wrap: wrap; gap: .5rem; margin-bottom: 1.5rem; }
+.p-tag {
+  display: inline-block; font-size: .67rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+  color: var(--gold); background: rgba(201,151,58,.12); border: 1px solid rgba(201,151,58,.28);
+  padding: 3px 12px; border-radius: 100px;
+}
+.p-tag:hover { background: rgba(201,151,58,.22); }
+.post-hdr h1 { font-family: var(--font-d); font-weight: 900; font-size: clamp(1.9rem,5vw,3.2rem); color: var(--white); line-height: 1.08; letter-spacing: -.03em; margin-bottom: 1.5rem; }
+.post-byline { font-size: .8rem; color: rgba(255,255,255,.42); display: flex; gap: 1rem; flex-wrap: wrap; align-items: center; }
+.post-byline a { color: rgba(255,255,255,.58); }
+.post-byline a:hover { color: var(--gold); }
+.post-sep { color: rgba(255,255,255,.2); }
+
+/* Post body */
+.post-body-wrap { padding: 4rem 1.5rem 3rem; }
+.post-body { max-width: var(--prose); margin-inline: auto; }
+.post-body p { font-size: 1.05rem; line-height: 1.9; color: var(--text); margin-bottom: 1.5rem; }
+.post-body h2 { font-family: var(--font-d); font-weight: 900; font-size: 1.65rem; color: var(--ink); letter-spacing: -.02em; margin: 3rem 0 1.25rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border); line-height: 1.2; }
+.post-body h3 { font-family: var(--font-d); font-size: 1.25rem; font-weight: 700; color: var(--navy); margin: 2rem 0 1rem; }
+.post-body blockquote { margin: 2.5rem 0; padding: 1.5rem 2rem 1.5rem 1.5rem; border-left: 3px solid var(--gold); background: var(--gold-pale); border-radius: 0 10px 10px 0; }
+.post-body blockquote p { font-family: var(--font-d); font-style: italic; font-size: 1.1rem; color: var(--navy); line-height: 1.65; margin: 0; }
+.post-body ul, .post-body ol { padding-left: 1.5rem; margin-bottom: 1.5rem; }
+.post-body ul li { list-style: disc; }
+.post-body ol li { list-style: decimal; }
+.post-body li { font-size: 1rem; line-height: 1.8; color: var(--text); margin-bottom: .75rem; }
+.post-body a { color: var(--navy-soft); font-weight: 500; text-decoration: underline; text-underline-offset: 3px; }
+.post-body a:hover { color: var(--gold); }
+.post-body img { border-radius: 10px; margin: 2rem auto; box-shadow: var(--sh); }
+
+/* Post signature */
+.post-sig {
+  display: flex; gap: 1.25rem; align-items: center;
+  margin-top: 4rem; padding: 1.75rem; border-radius: 14px;
+  background: var(--cream); border: 1px solid var(--border);
+}
+.sig-av {
+  width: 52px; height: 52px; border-radius: 50%; flex-shrink: 0;
+  background: linear-gradient(135deg, var(--navy), var(--navy-soft));
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-d); font-weight: 900; font-size: 1rem; color: var(--gold-lt);
+}
+.sig-name { font-family: var(--font-d); font-weight: 700; font-size: .97rem; color: var(--ink); margin-bottom: .25rem; }
+.sig-role { font-size: .78rem; color: var(--muted); line-height: 1.55; }
+
+/* Post share (redes sociales) */
+.post-share { padding: 1.5rem; background: var(--white); border-top: 1px solid var(--border); }
+.post-share-in { max-width: var(--prose); margin-inline: auto; display: flex; align-items: center; gap: 1.25rem; flex-wrap: wrap; }
+.share-label { font-size: .72rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+.share-links { display: flex; gap: .6rem; }
+.share-btn {
+  display: flex; align-items: center; gap: .4rem; padding: .4rem .9rem;
+  font-size: .75rem; font-weight: 600; border-radius: 6px; border: 1px solid var(--border);
+  color: var(--text-lt); background: var(--cream); transition: all var(--ease);
+}
+.share-btn svg { width: 14px; height: 14px; fill: currentColor; }
+.share-btn:hover { background: var(--navy); color: var(--white); border-color: var(--navy); }
+
+/* Back link */
+.post-back { background: var(--cream); border-top: 1px solid var(--border); padding: 1.5rem; }
+.post-back-in { max-width: var(--prose); margin-inline: auto; }
+.back-lnk {
+  display: inline-flex; align-items: center; gap: .5rem;
+  font-size: .8rem; font-weight: 600; color: var(--navy); transition: color var(--ease);
+}
+.back-lnk::before { content: '←'; transition: transform var(--ease); }
+.back-lnk:hover { color: var(--gold); }
+.back-lnk:hover::before { transform: translateX(-4px); }
+
+/* ── STATIC PAGE ────────────────────────────────────────────── */
+.static-body { padding: 4rem 1.5rem 5rem; }
+.static-body .prose h2 { font-family: var(--font-d); font-size: 1.35rem; font-weight: 700; color: var(--ink); margin: 2.5rem 0 1rem; padding-top: 2rem; border-top: 1px solid var(--border); }
+.static-body .prose h2:first-child { margin-top: 0; padding-top: 0; border-top: none; }
+.static-body .prose p { font-size: 1rem; color: var(--text); line-height: 1.85; margin-bottom: 1.25rem; }
+.static-body .prose ul { padding-left: 1.5rem; margin-bottom: 1.25rem; }
+.static-body .prose li { list-style: disc; color: var(--text); line-height: 1.8; margin-bottom: .75rem; }
+.static-body .prose strong { color: var(--ink); font-weight: 600; }
+
+/* ── FOOTER ─────────────────────────────────────────────────── */
+.ftr { background: var(--ink); color: rgba(255,255,255,.5); padding: 4rem 1.5rem 2rem; margin-top: auto; }
+.ftr-grid {
+  max-width: var(--max); margin-inline: auto;
+  display: grid; grid-template-columns: 2.5fr 1fr 1fr 2fr; gap: 3rem;
+  padding-bottom: 3rem; border-bottom: 1px solid rgba(255,255,255,.07);
+  margin-bottom: 2rem;
+}
+.ftr-brand-name { font-family: var(--font-d); font-weight: 900; font-size: 1.1rem; color: var(--white); margin-bottom: .5rem; }
+.ftr-divider { width: 36px; height: 2px; background: var(--gold); border-radius: 2px; margin: 1rem 0; }
+.ftr-desc { font-size: .8rem; color: rgba(255,255,255,.38); line-height: 1.75; max-width: 260px; }
+.ftr-social { display: flex; gap: .6rem; margin-top: 1.5rem; flex-wrap: wrap; }
+.ftr-soc-btn {
+  display: flex; align-items: center; justify-content: center;
+  width: 34px; height: 34px; border-radius: 7px;
+  border: 1px solid rgba(255,255,255,.12); color: rgba(255,255,255,.45);
+  transition: all var(--ease);
+}
+.ftr-soc-btn:hover { color: var(--gold-lt); border-color: rgba(201,151,58,.45); background: rgba(201,151,58,.08); }
+.ftr-soc-btn svg { width: 15px; height: 15px; fill: currentColor; }
+.ftr-col h4 { font-size: .65rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: rgba(255,255,255,.3); margin-bottom: 1rem; }
+.ftr-col ul { display: flex; flex-direction: column; gap: .75rem; }
+.ftr-col a { font-size: .83rem; color: rgba(255,255,255,.45); transition: color var(--ease); }
+.ftr-col a:hover { color: var(--gold-lt); }
+.ftr-disclaimer { font-size: .77rem; color: rgba(255,255,255,.28); line-height: 1.8; }
+.ftr-bottom { max-width: var(--max); margin-inline: auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
+.ftr-copy { font-size: .73rem; color: rgba(255,255,255,.22); }
+.ftr-badge { font-size: .65rem; color: rgba(255,255,255,.18); letter-spacing: .08em; text-transform: uppercase; }
+
+/* ── RESPONSIVE ─────────────────────────────────────────────── */
+@media (max-width: 900px) {
+  .bio-grid { grid-template-columns: 1fr; gap: 3rem; }
+  .ftr-grid { grid-template-columns: 1fr 1fr; gap: 2rem; }
+}
+@media (max-width: 768px) {
+  .burger { display: flex; }
+  .nav-d, .hdr-social { display: none; }
+  .hero { padding: 4rem 1.5rem; }
+  .ftr-grid { grid-template-columns: 1fr; gap: 2rem; }
+  .ftr-bottom { flex-direction: column; text-align: center; }
+  .post-sig { flex-direction: column; text-align: center; }
+}
+@media (max-width: 520px) {
+  .cards-grid { grid-template-columns: 1fr; }
+  .topics-grid { grid-template-columns: 1fr 1fr; }
+  .hero-ctas { flex-direction: column; }
+  .btn { justify-content: center; text-align: center; }
+}
+@media print {
+  .hdr, .hero-ctas, .ftr, .post-back, .post-share { display: none; }
+  body { color: #000; background: #fff; }
+}
+]]></b:skin>
+</head>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!--  BODY                                                           -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<body>
+<a class='skip' href='#content'>Saltar al contenido</a>
+
+<!-- ════════════════════════════════════════
+     HEADER
+════════════════════════════════════════ -->
+<header class='hdr' role='banner'>
+  <div class='hdr-in'>
+
+    <!-- Logo -->
+    <a class='logo' expr:href='data:blog.homepageUrl' aria-label='Voces por la Dignidad'>
+      <span class='logo-m'>Voces por la Dignidad</span>
+      <span class='logo-s'>Lenin Pérez Guzmán</span>
+    </a>
+
+    <!-- Nav desktop -->
+    <nav class='nav-d' aria-label='Principal'>
+      <a expr:href='data:blog.homepageUrl'>Inicio</a>
+      <a expr:href='data:blog.homepageUrl + &quot;#articulos&quot;'>Artículos</a>
+      <a href='/p/sobre-mi.html'>Sobre mí</a>
+    </nav>
+
+    <!-- Social + burger -->
+    <div style='display:flex;align-items:center;gap:.75rem;'>
+      <div class='hdr-social' aria-label='Redes sociales'>
+        <!-- Facebook -->
+        <a href='https://www.facebook.com/TU_USUARIO' target='_blank' rel='noopener' aria-label='Facebook'>
+          <svg viewBox='0 0 24 24'><path d='M22 12a10 10 0 1 0-11.56 9.88v-6.99H7.9V12h2.54V9.8c0-2.5 1.49-3.89 3.77-3.89 1.09 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56V12h2.77l-.44 2.89h-2.33v6.99A10 10 0 0 0 22 12'/></svg>
+        </a>
+        <!-- Instagram -->
+        <a href='https://www.instagram.com/TU_USUARIO' target='_blank' rel='noopener' aria-label='Instagram'>
+          <svg viewBox='0 0 24 24'><path d='M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z'/></svg>
+        </a>
+        <!-- LinkedIn -->
+        <a href='https://www.linkedin.com/in/TU_USUARIO' target='_blank' rel='noopener' aria-label='LinkedIn'>
+          <svg viewBox='0 0 24 24'><path d='M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z'/></svg>
+        </a>
+        <!-- WhatsApp -->
+        <a href='https://wa.me/50600000000' target='_blank' rel='noopener' aria-label='WhatsApp'>
+          <svg viewBox='0 0 24 24'><path d='M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z'/></svg>
+        </a>
+      </div>
+      <button class='burger' id='burger' aria-expanded='false' aria-controls='nav-m' aria-label='Menú'>
+        <span class='bar'></span><span class='bar'></span><span class='bar'></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- Nav móvil -->
+<nav class='nav-m' id='nav-m' aria-label='Móvil'>
+  <a expr:href='data:blog.homepageUrl'>Inicio</a>
+  <a expr:href='data:blog.homepageUrl + &quot;#articulos&quot;'>Artículos</a>
+  <a href='/p/sobre-mi.html'>Sobre mí</a>
+  <div class='nav-m-social'>
+    <a href='https://www.facebook.com/TU_USUARIO' target='_blank' rel='noopener'>
+      <svg viewBox='0 0 24 24' style='width:18px;height:18px;fill:currentColor'><path d='M22 12a10 10 0 1 0-11.56 9.88v-6.99H7.9V12h2.54V9.8c0-2.5 1.49-3.89 3.77-3.89 1.09 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56V12h2.77l-.44 2.89h-2.33v6.99A10 10 0 0 0 22 12'/></svg>
+      Facebook
+    </a>
+    <a href='https://www.instagram.com/TU_USUARIO' target='_blank' rel='noopener'>
+      <svg viewBox='0 0 24 24' style='width:18px;height:18px;fill:currentColor'><path d='M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z'/></svg>
+      Instagram
+    </a>
+  </div>
+</nav>
+
+<!-- ════════════════════════════════════════
+     HERO — solo en inicio
+════════════════════════════════════════ -->
+<b:if cond='data:blog.pageType == &quot;index&quot; and not data:blog.searchLabel and not data:blog.searchQuery'>
+  <section class='hero' aria-labelledby='hero-h1'>
+    <div class='wrap'>
+      <div class='hero-in'>
+        <p class='hero-kicker'>Blog personal · Costa Rica</p>
+        <h1 id='hero-h1'>Voces por<br/><em>la Dignidad</em></h1>
+        <p class='hero-sub'>
+          Análisis y reflexión sobre derechos humanos, accesibilidad e inclusión social
+          desde una perspectiva educativa, independiente y no partidaria.
+        </p>
+        <div class='hero-ctas'>
+          <a class='btn btn-gold' href='#articulos'>Leer artículos</a>
+          <a class='btn btn-ghost' href='/p/sobre-mi.html'>Conocer el proyecto</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</b:if>
+
+<!-- PAGE HEADER para búsqueda por etiqueta -->
+<b:if cond='data:blog.searchLabel'>
+  <div class='page-hdr'>
+    <div class='page-hdr-in'>
+      <p class='page-kicker'>Etiqueta</p>
+      <h1><data:blog.searchLabel/></h1>
+    </div>
+  </div>
+</b:if>
+
+<!-- PAGE HEADER para búsqueda general -->
+<b:if cond='data:blog.searchQuery'>
+  <div class='page-hdr'>
+    <div class='page-hdr-in'>
+      <p class='page-kicker'>Búsqueda</p>
+      <h1>Resultados para: &quot;<data:blog.searchQuery/>&quot;</h1>
+    </div>
+  </div>
+</b:if>
+
+<!-- PAGE HEADER para página estática -->
+<b:if cond='data:blog.pageType == &quot;static_page&quot;'>
+  <b:loop values='data:posts' var='post'>
+    <div class='page-hdr'>
+      <div class='page-hdr-in'>
+        <p class='page-kicker'>Página</p>
+        <h1><data:post.title/></h1>
+      </div>
+    </div>
+  </b:loop>
+</b:if>
+
+<!-- ════════════════════════════════════════
+     ARTÍCULOS HEADER + FILTROS (index y etiquetas)
+════════════════════════════════════════ -->
+<b:if cond='data:blog.pageType == &quot;index&quot;'>
+  <div class='sec-art wrap' id='articulos'>
+    <p class='sec-eyebrow'>Publicaciones</p>
+    <h2 class='sec-h'>Artículos</h2>
+    <nav class='filters' aria-label='Filtrar por categoría'>
+      <a class='ftag' expr:href='data:blog.homepageUrl'>Todos</a>
+      <a class='ftag' expr:href='data:blog.homepageUrl + &quot;search/label/Derechos%20humanos&quot;'>Derechos humanos</a>
+      <a class='ftag' expr:href='data:blog.homepageUrl + &quot;search/label/Accesibilidad&quot;'>Accesibilidad</a>
+      <a class='ftag' expr:href='data:blog.homepageUrl + &quot;search/label/Inclusi%C3%B3n&quot;'>Inclusión</a>
+      <a class='ftag' expr:href='data:blog.homepageUrl + &quot;search/label/Educaci%C3%B3n%20c%C3%ADvica&quot;'>Educación cívica</a>
+    </nav>
+  </div>
+</b:if>
+
+<!-- ════════════════════════════════════════
+     WIDGET BLOG — ARQUITECTURA LIMPIA v4
+     Sin b:if/b:elseif/b:else en el main includable.
+     Cada includable maneja su propio tipo de página.
+════════════════════════════════════════ -->
+<div id='content'>
+  <b:section id='main' maxwidgets='1' showaddelement='no'>
+    <b:widget id='Blog1' locked='true' title='Blog' type='Blog' version='1' visible='true'>
+
+      <!-- MAIN INCLUDABLE: delega a sub-includables -->
+      <b:includable id='main'>
+        <b:if cond='data:blog.pageType == &quot;item&quot;'>
+          <b:loop values='data:posts' var='post'>
+            <b:include data='post' name='post'/>
+          </b:loop>
+        </b:if>
+
+        <b:if cond='data:blog.pageType == &quot;static_page&quot;'>
+          <b:loop values='data:posts' var='post'>
+            <b:include data='post' name='static'/>
+          </b:loop>
+        </b:if>
+
+        <b:if cond='data:blog.pageType == &quot;index&quot;'>
+          <b:include name='index'/>
+        </b:if>
+
+        <b:include name='status-message'/>
+      </b:includable>
+
+      <!-- INDEX INCLUDABLE: lista de cards -->
+      <b:includable id='index'>
+        <div class='wrap'>
+          <div class='cards-grid'>
+            <b:loop values='data:posts' var='post'>
+              <article class='card'>
+                <div class='card-body'>
+                  <div class='card-meta'>
+                    <span class='card-date'><data:post.date/></span>
+                    <b:loop values='data:post.labels' var='label'>
+                      <a class='c-tag' expr:href='data:label.url'><data:label.name/></a>
+                    </b:loop>
+                  </div>
+                  <h2 class='card-title'>
+                    <a expr:href='data:post.url'><data:post.title/></a>
+                  </h2>
+                  <p class='card-excerpt'><data:post.snippet/></p>
+                  <a class='card-cta' expr:href='data:post.url'>Leer artículo</a>
+                </div>
+              </article>
+            </b:loop>
+          </div>
+          <div class='pager'>
+            <b:if cond='data:newerPageUrl'>
+              <a class='btn btn-outline' expr:href='data:newerPageUrl'>&#8592; Más recientes</a>
+            </b:if>
+            <b:if cond='data:olderPageUrl'>
+              <a class='btn btn-outline' expr:href='data:olderPageUrl'>Anteriores &#8594;</a>
+            </b:if>
+          </div>
+        </div>
+      </b:includable>
+
+      <!-- POST INCLUDABLE: artículo individual -->
+      <b:includable id='post' var='post'>
+        <article>
+          <div class='post-hdr'>
+            <div class='post-hdr-in'>
+              <nav aria-label='Ruta de navegación'>
+                <ol class='breadcrumb' role='list'>
+                  <li><a expr:href='data:blog.homepageUrl'>Inicio</a></li>
+                  <li><data:post.title/></li>
+                </ol>
+              </nav>
+              <div class='post-tags'>
+                <b:loop values='data:post.labels' var='label'>
+                  <a class='p-tag' expr:href='data:label.url'><data:label.name/></a>
+                </b:loop>
+              </div>
+              <h1 class='post-hdr h1'><data:post.title/></h1>
+              <div class='post-byline'>
+                <span>Por <a href='/p/sobre-mi.html'>Lenin Pérez Guzmán</a></span>
+                <span class='post-sep'>·</span>
+                <time expr:datetime='data:post.timestampISO8601'><data:post.timestamp/></time>
+              </div>
+            </div>
+          </div>
+
+          <div class='post-body-wrap'>
+            <div class='post-body'>
+              <data:post.body/>
+              <div class='post-sig'>
+                <div class='sig-av'>LP</div>
+                <div>
+                  <p class='sig-name'>Lenin Antonio Pérez Guzmán</p>
+                  <p class='sig-role'>Gestor comunitario · Defensor de derechos humanos<br/>Accesibilidad · Inclusión social · Costa Rica</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Compartir -->
+          <div class='post-share'>
+            <div class='post-share-in'>
+              <span class='share-label'>Compartir</span>
+              <div class='share-links'>
+                <a class='share-btn' expr:href='&quot;https://www.facebook.com/sharer/sharer.php?u=&quot; + data:post.url' target='_blank' rel='noopener'>
+                  <svg viewBox='0 0 24 24'><path d='M22 12a10 10 0 1 0-11.56 9.88v-6.99H7.9V12h2.54V9.8c0-2.5 1.49-3.89 3.77-3.89 1.09 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56V12h2.77l-.44 2.89h-2.33v6.99A10 10 0 0 0 22 12'/></svg>
+                  Facebook
+                </a>
+                <a class='share-btn' expr:href='&quot;https://wa.me/?text=&quot; + data:post.title + &quot; &quot; + data:post.url' target='_blank' rel='noopener'>
+                  <svg viewBox='0 0 24 24'><path d='M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z'/></svg>
+                  WhatsApp
+                </a>
+                <a class='share-btn' expr:href='&quot;https://www.linkedin.com/sharing/share-offsite/?url=&quot; + data:post.url' target='_blank' rel='noopener'>
+                  <svg viewBox='0 0 24 24'><path d='M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z'/></svg>
+                  LinkedIn
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <div class='post-back'>
+            <div class='post-back-in'>
+              <a class='back-lnk' expr:href='data:blog.homepageUrl'>Volver a todos los artículos</a>
+            </div>
+          </div>
+        </article>
+      </b:includable>
+
+      <!-- STATIC INCLUDABLE: página estática -->
+      <b:includable id='static' var='post'>
+        <div class='static-body'>
+          <div class='prose'>
+            <data:post.body/>
+          </div>
+        </div>
+      </b:includable>
+
+      <!-- STATUS MESSAGE -->
+      <b:includable id='status-message'>
+        <b:if cond='data:navMessage'>
+          <div class='wrap' style='padding:4rem 0;text-align:center;color:#6b7280;font-size:.95rem;'>
+            <p><data:navMessage/></p>
+          </div>
+        </b:if>
+      </b:includable>
+
+      <!-- INCLUDABLES REQUERIDOS POR BLOGGER -->
+      <b:includable id='nextprev'></b:includable>
+      <b:includable id='backlinks' var='post'></b:includable>
+      <b:includable id='backlinkDeleteIcon' var='i'></b:includable>
+      <b:includable id='backlinksControl' var='post'></b:includable>
+      <b:includable id='byline' var='post'></b:includable>
+      <b:includable id='comment' var='comment'></b:includable>
+      <b:includable id='commentDeleteIcon' var='i'></b:includable>
+      <b:includable id='commentForm' var='post'></b:includable>
+      <b:includable id='commentList' var='post'></b:includable>
+      <b:includable id='commentPicker' var='post'></b:includable>
+      <b:includable id='feedLinks'></b:includable>
+      <b:includable id='feedLinksBody' var='links'></b:includable>
+      <b:includable id='iframe' var='post'></b:includable>
+      <b:includable id='postQuickEdit' var='post'></b:includable>
+
+    </b:widget>
+  </b:section>
+</div><!-- /#content -->
+
+<!-- ════════════════════════════════════════
+     SECCIONES DE INICIO (solo si NO hay etiqueta/búsqueda)
+════════════════════════════════════════ -->
+<b:if cond='data:blog.pageType == &quot;index&quot; and not data:blog.searchLabel and not data:blog.searchQuery'>
+
+  <!-- Cita -->
+  <div class='q-band'>
+    <div class='q-in'>
+      <span class='q-mark' aria-hidden='true'>&#8220;</span>
+      <p class='q-text'>La dignidad humana no se negocia.</p>
+      <p class='q-author'>— Lenin Antonio Pérez Guzmán</p>
+    </div>
+  </div>
+
+  <!-- Biografía -->
+  <div class='bio-band'>
+    <div class='bio-grid'>
+      <div>
+        <p class='bio-eyebrow'>El autor</p>
+        <h2 class='bio-h'>Lenin Antonio<br/>Pérez Guzmán</h2>
+        <div class='bio-text'>
+          <p>Gestor comunitario y líder social costarricense, reconocido por su compromiso con la inclusión, accesibilidad y transparencia. Su trabajo se enfoca en fortalecer espacios culturales y sociales que promuevan la participación activa de personas con discapacidad y sus familias.</p>
+          <p>Ha impulsado proyectos de desarrollo accesible en comunidades diversas, participando en procesos legales para garantizar que el Estado cumpla con la Ley Marco de Acceso a la Información Pública (Ley 10.554) y la Convención sobre los Derechos de las Personas con Discapacidad (CDPD).</p>
+          <p>Su liderazgo ha sido visible en espacios municipales y comunitarios, siendo referente en la gestión sociocultural con un enfoque integral hacia la inclusión activa.</p>
+        </div>
+        <div class='bio-cta'>
+          <a class='btn btn-navy' href='/p/sobre-mi.html'>Leer biografía completa</a>
+        </div>
+      </div>
+      <div class='bio-highlights'>
+        <div class='bio-card'>
+          <span class='bio-icon'>&#127775;</span>
+          <div>
+            <h3>Fundador de iniciativas sociales</h3>
+            <p>Creador de espacios para la inclusión y accesibilidad en comunidades costarricenses.</p>
+          </div>
+        </div>
+        <div class='bio-card'>
+          <span class='bio-icon'>&#9878;&#65039;</span>
+          <div>
+            <h3>Defensor de derechos</h3>
+            <p>Participación en procesos legales para garantizar acceso a la información pública.</p>
+          </div>
+        </div>
+        <div class='bio-card'>
+          <span class='bio-icon'>&#128241;</span>
+          <div>
+            <h3>Comunicación accesible</h3>
+            <p>Impulsor de recursos digitales, periódicos comunitarios y plataformas descentralizadas.</p>
+          </div>
+        </div>
+        <div class='bio-card'>
+          <span class='bio-icon'>&#129309;</span>
+          <div>
+            <h3>Liderazgo comunitario</h3>
+            <p>Representante de la voz de la inclusión en espacios municipales y organizaciones sociales.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Temas -->
+  <div class='topics-band'>
+    <div class='wrap'>
+      <p class='sec-eyebrow'>Áreas temáticas</p>
+      <h2 class='sec-h'>Temas que abordo</h2>
+      <div class='topics-grid'>
+        <a class='topic-card' expr:href='data:blog.homepageUrl + &quot;search/label/Derechos%20humanos&quot;'>
+          <span class='topic-icon'>&#9878;&#65039;</span>
+          <h3>Derechos humanos</h3>
+          <p>Estándares internacionales y su aplicación en Costa Rica y la región.</p>
+        </a>
+        <a class='topic-card' expr:href='data:blog.homepageUrl + &quot;search/label/Accesibilidad&quot;'>
+          <span class='topic-icon'>&#9851;&#65039;</span>
+          <h3>Accesibilidad</h3>
+          <p>Barreras y soluciones para garantizar la participación plena.</p>
+        </a>
+        <a class='topic-card' expr:href='data:blog.homepageUrl + &quot;search/label/Inclusi%C3%B3n&quot;'>
+          <span class='topic-icon'>&#129309;</span>
+          <h3>Inclusión social</h3>
+          <p>Construyendo sociedades más equitativas y participativas.</p>
+        </a>
+        <a class='topic-card' expr:href='data:blog.homepageUrl + &quot;search/label/Educaci%C3%B3n%20c%C3%ADvica&quot;'>
+          <span class='topic-icon'>&#128218;</span>
+          <h3>Educación cívica</h3>
+          <p>Conocimiento ciudadano sobre derechos, deberes y participación.</p>
+        </a>
+      </div>
+    </div>
+  </div>
+
+</b:if>
+
+<!-- ════════════════════════════════════════
+     FOOTER
+════════════════════════════════════════ -->
+<footer class='ftr' role='contentinfo'>
+  <div class='ftr-grid'>
+    <div>
+      <p class='ftr-brand-name'>Voces por la Dignidad</p>
+      <div class='ftr-divider'></div>
+      <p class='ftr-desc'>Blog personal de Lenin Antonio Pérez Guzmán. Gestor comunitario y defensor de derechos humanos desde Costa Rica.</p>
+      <div class='ftr-social' aria-label='Redes sociales'>
+        <a class='ftr-soc-btn' href='https://www.facebook.com/TU_USUARIO' target='_blank' rel='noopener' aria-label='Facebook'>
+          <svg viewBox='0 0 24 24'><path d='M22 12a10 10 0 1 0-11.56 9.88v-6.99H7.9V12h2.54V9.8c0-2.5 1.49-3.89 3.77-3.89 1.09 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56V12h2.77l-.44 2.89h-2.33v6.99A10 10 0 0 0 22 12'/></svg>
+        </a>
+        <a class='ftr-soc-btn' href='https://www.instagram.com/TU_USUARIO' target='_blank' rel='noopener' aria-label='Instagram'>
+          <svg viewBox='0 0 24 24'><path d='M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z'/></svg>
+        </a>
+        <a class='ftr-soc-btn' href='https://www.linkedin.com/in/TU_USUARIO' target='_blank' rel='noopener' aria-label='LinkedIn'>
+          <svg viewBox='0 0 24 24'><path d='M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z'/></svg>
+        </a>
+        <a class='ftr-soc-btn' href='https://wa.me/50600000000' target='_blank' rel='noopener' aria-label='WhatsApp'>
+          <svg viewBox='0 0 24 24'><path d='M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z'/></svg>
+        </a>
+      </div>
+    </div>
+    <div class='ftr-col'>
+      <h4>Navegación</h4>
+      <ul>
+        <li><a expr:href='data:blog.homepageUrl'>Inicio</a></li>
+        <li><a expr:href='data:blog.homepageUrl + &quot;#articulos&quot;'>Artículos</a></li>
+        <li><a href='/p/sobre-mi.html'>Sobre mí</a></li>
+      </ul>
+    </div>
+    <div class='ftr-col'>
+      <h4>Temas</h4>
+      <ul>
+        <li><a expr:href='data:blog.homepageUrl + &quot;search/label/Derechos%20humanos&quot;'>Derechos humanos</a></li>
+        <li><a expr:href='data:blog.homepageUrl + &quot;search/label/Accesibilidad&quot;'>Accesibilidad</a></li>
+        <li><a expr:href='data:blog.homepageUrl + &quot;search/label/Inclusi%C3%B3n&quot;'>Inclusión</a></li>
+        <li><a expr:href='data:blog.homepageUrl + &quot;search/label/Educaci%C3%B3n%20c%C3%ADvica&quot;'>Educación cívica</a></li>
+      </ul>
+    </div>
+    <div class='ftr-disclaimer'>
+      <p>Este sitio es un espacio personal de carácter educativo e informativo. Las opiniones expresadas son responsabilidad exclusiva del autor. No representa a partidos políticos, gobiernos ni organizaciones institucionales.</p>
+    </div>
+  </div>
+  <div class='ftr-bottom'>
+    <p class='ftr-copy'>&#169; <span id='yr'></span> Lenin Antonio Pérez Guzmán · Costa Rica</p>
+    <p class='ftr-badge'>Derechos Humanos · Accesibilidad · Inclusión</p>
+  </div>
+</footer>
+
+<!-- ════════════════════════════════════════
+     JAVASCRIPT
+════════════════════════════════════════ -->
+<script type='text/javascript'>
+//<![CDATA[
+(function(){
+'use strict';
+
+/* Año */
+var yr = document.getElementById('yr');
+if(yr) yr.textContent = new Date().getFullYear();
+
+/* Hamburger */
+var burger = document.getElementById('burger');
+var navM   = document.getElementById('nav-m');
+if(burger && navM){
+  function openNav(){  navM.classList.add('open');    burger.setAttribute('aria-expanded','true');  document.body.style.overflow='hidden'; }
+  function closeNav(){ navM.classList.remove('open'); burger.setAttribute('aria-expanded','false'); document.body.style.overflow=''; }
+  burger.addEventListener('click', function(){ burger.getAttribute('aria-expanded')==='true' ? closeNav() : openNav(); });
+  document.addEventListener('keydown', function(e){ if(e.key==='Escape') closeNav(); });
+  navM.addEventListener('click', function(e){ if(e.target.tagName==='A') closeNav(); });
+  window.addEventListener('resize', function(){ if(window.innerWidth > 768) closeNav(); });
+}
+
+/* Marcar filtro activo por URL */
+var url = window.location.href;
+document.querySelectorAll('.ftag').forEach(function(tag){
+  var href = tag.getAttribute('href') || '';
+  if(href.indexOf('label/') > -1){
+    var lbl = decodeURIComponent((href.split('label/')[1] || ''));
+    if(lbl && url.indexOf(encodeURIComponent(lbl)) > -1){
+      document.querySelectorAll('.ftag').forEach(function(t){ t.style.background=''; t.style.borderColor=''; t.style.color=''; });
+      tag.style.background = '#0c1c38';
+      tag.style.borderColor = '#0c1c38';
+      tag.style.color = '#ffffff';
+    }
+  }
+});
+
+/* Skip link */
+var skip = document.querySelector('.skip');
+if(skip){
+  skip.addEventListener('click', function(e){
+    var t = document.getElementById('content');
+    if(t){ e.preventDefault(); t.setAttribute('tabindex','-1'); t.focus(); t.addEventListener('blur', function(){ t.removeAttribute('tabindex'); },{once:true}); }
+  });
+}
+
+})();
+//]]>
+</script>
+
+</body>
+</html>
